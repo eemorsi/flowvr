@@ -1,0 +1,15 @@
+pdi:
+  logging: debug
+
+  data:
+    wait: int
+    scalar: int
+
+  plugins:
+    flowvr:
+      component: module
+      wait_on_data: wait
+      input_ports:
+        text:s 
+          data: scalar
+
