@@ -19,7 +19,8 @@ int main() {
     while (wait) {
         PDI_expose("scalar", &scalar, PDI_OUT);
         printf("C scalar: %d\n", scalar);
-        
+        if (scalar == 10)
+            wait = 0;
         PDI_expose("wait", &wait , PDI_IN);
         scalar++;
         sleep(2);

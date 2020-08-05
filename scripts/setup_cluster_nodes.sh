@@ -7,7 +7,7 @@ port=16380
 redis_address="$(hostname --ip-address)"
 redis_address="$redis_address:$port"
 
-pdi_home=/home/emorsi/pdi/build
+pdi_home=$HOME/pdi/build
 scripts_home=`pwd`
 
 ray start --head --redis-port=$port --webui-host 0.0.0.0 --num-cpus 1
