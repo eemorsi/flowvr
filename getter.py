@@ -51,8 +51,8 @@ class Actor(object):
     def kill(self):
         ray.actor.exit_actor()
 
-class FlowvrActor(Actor):
-    def run(self, cmd, hosts):
+# class FlowvrActor(Actor):
+#     def run(self, cmd, hosts):
 
 
 
@@ -68,6 +68,7 @@ if __name__ == '__main__':
     '''
     cluster = Resources()
     hosts = cluster.get_hosts()
+    print(hosts)
 
     '''
     Start data exchange with flowvr

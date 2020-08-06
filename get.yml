@@ -10,6 +10,6 @@ pdi:
       component: module
       wait_on_data: wait
       input_ports:
-        text:s 
+        text:
           data: scalar
 
