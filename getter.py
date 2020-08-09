@@ -52,6 +52,8 @@ class FlowvrActor(object):
         from flowvrapp import *
         from pdi_flowvr import Module_PDI
 
+        # can be modified to be dynamic 
+        # target is to proof it only 
         putmodule_cmd="./cputter"
         getmodule_cmd=" ".join(["python3","getter.py",node, cluster])
 
