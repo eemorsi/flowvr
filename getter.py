@@ -3,6 +3,7 @@ import yaml
 import ray
 import os
 import numpy as np
+import sys
 
 from subprocess import PIPE, Popen
 from itertools import combinations
@@ -35,9 +36,9 @@ class Resources(object):
 
 
 @ray.remote
-class Actor(object):
-    def __init__(self):
-        self.id = 0
+class FlowvrActor(object):
+    def __init__(self, id):
+        self.id = id
 
     def run(self, cmd, hosts):
         process = Popen(args=cmd, stdin=None, stdout=PIPE,
@@ -51,18 +52,27 @@ class Actor(object):
     def kill(self):
         ray.actor.exit_actor()
 
-# class FlowvrActor(Actor):
-#     def run(self, cmd, hosts):
+
+def init():
+    if(len(sys.argv[1:])< 2):
+        print("Invalid cluster arguments")
+        exit(1)
+    else:
+        
+        # precreated ray cluster configuration
+        machine = sys.argv[1] # "grisu-48"
+        cluster = sys.argv[2] # "nancy.grid5000.fr"
+        redis = ".".join([machine, cluster])
+        ray.init(address=":".join([redis, "16480"])) 
+
 
 
 
 if __name__ == '__main__':
-
-    # precreated ray cluster configuration
-    machine = "gros-16"
-    cluster = "nancy.grid5000.fr"
-    redis = ".".join([machine, cluster])
-    ray.init(address=":".join([redis, "16380"]))
+    '''
+    Init ray preconfigured cluster
+    '''
+    init()
     '''
     Retrieve lists of hosts for locating processes
     '''
@@ -80,16 +90,16 @@ if __name__ == '__main__':
         except yaml.YAMLError as exc:
             exit(exc)
 
-    pdi.init(yaml.dump(config["pdi"]))
-    wait = np.array(0)
-    scalar = np.array(0)
+    # pdi.init(yaml.dump(config["pdi"]))
+    # wait = np.array(0)
+    # scalar = np.array(0)
 
-    pdi.expose('wait', wait, pdi.IN)
-    # with each message passed through flowvr, create an actor job
-    while(wait != 0):
-        pdi.expose('scalar', scalar, pdi.IN)
+    # pdi.expose('wait', wait, pdi.IN)
+    # # with each message passed through flowvr, create an actor job
+    # while(wait != 0):
+    #     pdi.expose('scalar', scalar, pdi.IN)
 
-        print("PY scalar: {}".format(scalar))
-        pdi.expose('wait', wait, pdi.IN)
+    #     print("PY scalar: {}".format(scalar))
+    #     pdi.expose('wait', wait, pdi.IN)
 
-    pdi.finalize()
+    # pdi.finalize()
