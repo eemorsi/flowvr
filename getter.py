@@ -48,6 +48,20 @@ class FlowvrActor(object):
     def get_root(self):
         return ray.services.get_node_ip_address()
 
+    def create_config(self, hosts, node, cluster):
+        from flowvrapp import *
+        from pdi_flowvr import Module_PDI
+
+        putmodule_cmd="./cputter"
+        getmodule_cmd=" ".join(["python3","getter.py",node, cluster])
+
+        putmodule = Module_PDI("put", cmdline = putmodule_cmd, pdi_conf = "put.yml")
+        getmodule = Module_PDI("get", cmdline = getmodule_cmd, pdi_conf = "get.yml")
+
+        putmodule.getPort("text").link(getmodule.getPort("text"))
+                
+        app.generate_xml("rflowvr")
+
     # A safe method to clear actors
     def kill(self):
         ray.actor.exit_actor()
@@ -99,6 +113,8 @@ if __name__ == '__main__':
     # with each message passed through flowvr, create an actor job
     while(wait != 0):
         pdi.expose('scalar', scalar, pdi.IN)
+
+
 
         print("PY scalar: {}".format(scalar))
         pdi.expose('wait', wait, pdi.IN)
