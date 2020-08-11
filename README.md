@@ -1,15 +1,15 @@
 
 ## Installation:
  1- FlowVR:	
- ```bash
- git clone https://gitlab.inria.fr/flowvr/flowvr-ex.git
- cd flowvr-ex
- mkdir BUILD
- cd BUILD
- ccmake .. -DCMAKE_INSTALL_PREFIX:PATH=$HOME/pdi/build/flowvr
- make -j
- make install
-```
+    ```bash
+    git clone https://gitlab.inria.fr/flowvr/flowvr-ex.git
+    cd flowvr-ex
+    mkdir BUILD
+    cd BUILD
+    ccmake .. -DCMAKE_INSTALL_PREFIX:PATH=$HOME/pdi/build/flowvr
+    make -j
+    make install
+    ```
  2- PDI:
  ```bash
  source /home/emorsi/pdi/build/flowvr/bin/flowvr-suite-config.sh
