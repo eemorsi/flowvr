@@ -43,6 +43,8 @@
  ```bash
  bash $PDI_HOME/bin/pdirun
  gcc -O2 putter.c -o cputter  -lpdi -lparaconf -lyaml 
+ # For testing -> test PDI with empty YAML 
+ ./cputter
  ```
 
 ## PDI+FlowVR Limitations:
