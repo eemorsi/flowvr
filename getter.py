@@ -115,9 +115,8 @@ if __name__ == '__main__':
     # with each message passed through flowvr, create an actor job
     while(wait != 0):
         pdi.expose('scalar', scalar, pdi.IN)
-
-
-
+        # Dumy Ray computation and sum 
+        
         print("PY scalar: {}".format(scalar))
         pdi.expose('wait', wait, pdi.IN)
 
