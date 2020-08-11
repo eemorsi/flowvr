@@ -37,9 +37,9 @@
  ```
 
 ## PDI+FlowVR Limitations:
-1- Langauges bindings e.g. data types support from c <-> python
-2- Waiting on data may cause deadline if two-ways data transfere is allowed 
-3- PDI's Flowvr documentation is not enough at all to understand how to use FlowVR plugin
-4- FlowVR deamon can be hide from the user by providing automatic daemon launcher
-5- Duplicate memory sigments can be a limitation factor with a number of applications 
-6- 
+    - Langauges bindings e.g. data types support from c <-> python
+    - Waiting on data may cause deadline if two-ways data transfere is allowed 
+    - PDI's Flowvr documentation is not enough at all to understand how to use FlowVR plugin
+    - FlowVR deamon can be hide from the user by providing automatic daemon launcher
+    - Duplicate memory sigments can be a limitation factor with a number of applications 
+    - 
