@@ -69,7 +69,7 @@ class FlowvrActor(object):
         ray.actor.exit_actor()
 
 
-def init():
+def ray_init():
     if(len(sys.argv[1:])< 2):
         print("Invalid cluster arguments")
         exit(1)
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     '''
     Init ray preconfigured cluster
     '''
-    init()
+    ray_init()
     '''
     Retrieve lists of hosts for locating processes
     '''
