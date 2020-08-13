@@ -1,5 +1,4 @@
 /**
- * 
  * gcc -O2 putter.c -o cputter -I$HOME/pdi/build/include -L$HOME/pdi/build/lib -lpdi -lparaconf -lyaml 
  **/
 

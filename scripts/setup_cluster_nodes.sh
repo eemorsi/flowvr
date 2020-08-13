@@ -7,7 +7,7 @@ source /etc/profile
 # instead install ray with pip3 and use it 
 # pip3 install -U https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-0.9.0.dev0-cp37-cp37m-manylinux1_x86_64.whl
 
-export PATH=$PATH:/home/emorsi/.local/bin
+export PATH=$PATH:$HOME/.local/bin
 #----------------------------------------------
 
 
