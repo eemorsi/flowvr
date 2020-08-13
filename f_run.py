@@ -9,6 +9,7 @@ import numpy as np
 # from itertools import combinations
 # from sys import argv, exit
 from f_proxy import *
+import getter
 
 
 if __name__ == '__main__':
