@@ -1,88 +1,14 @@
 import pdi
 import yaml
 import ray
-import os
+# import os
 import numpy as np
-import sys
+# import sys
 
-from subprocess import PIPE, Popen
-from itertools import combinations
-from sys import argv, exit
-
-
-class Resources(object):
-    def __init__(self):
-        self._nodes = {}
-        self.get_resources()
-
-    def get_resources(self):
-        for rn in ray.nodes():
-            if (rn["Alive"]) and (rn["Resources"]["CPU"] > 1):
-                self._nodes[rn["NodeManagerAddress"]] = rn["Resources"]
-        return self._nodes
-
-    def get_nodes(self):
-        return self._nodes
-
-    def get_hosts(self):
-        hosts = []
-        for indx, (hostname, cpus) in enumerate(self._nodes.items()):
-            [hosts.append(hostname) for _ in range(int(cpus['CPU']))]
-        return hosts
-
-    def get_chunk(self, hosts, n):
-        for i in range(0, len(hosts), n):
-            yield hosts[i:i + n]
-
-
-@ray.remote
-class FlowvrActor(object):
-    def __init__(self, id):
-        self.id = id
-
-    def run(self, cmd, hosts):
-        process = Popen(args=cmd, stdin=None, stdout=PIPE,
-                        stderr=None, shell=True)
-        return process.communicate()[0]
-
-    def get_root(self):
-        return ray.services.get_node_ip_address()
-
-    def create_config(self, hosts, node, cluster):
-        from flowvrapp import *
-        from pdi_flowvr import Module_PDI
-
-        # can be modified to be dynamic 
-        # target is to proof it only 
-        putmodule_cmd="./cputter"
-        getmodule_cmd=" ".join(["python3","getter.py",node, cluster])
-
-        putmodule = Module_PDI("put", cmdline = putmodule_cmd, pdi_conf = "put.yml")
-        getmodule = Module_PDI("get", cmdline = getmodule_cmd, pdi_conf = "get.yml")
-
-        putmodule.getPort("text").link(getmodule.getPort("text"))
-                
-        app.generate_xml("rflowvr")
-
-    # A safe method to clear actors
-    def kill(self):
-        ray.actor.exit_actor()
-
-
-def ray_init():
-    if(len(sys.argv[1:])< 2):
-        print("Invalid cluster arguments")
-        exit(1)
-    else:
-        
-        # precreated ray cluster configuration
-        machine = sys.argv[1] # "grisu-48"
-        cluster = sys.argv[2] # "nancy.grid5000.fr"
-        redis = ".".join([machine, cluster])
-        ray.init(address=":".join([redis, "16480"])) 
-        # ray.init()
-
-
+# from subprocess import PIPE, Popen
+# from itertools import combinations
+# from sys import argv, exit
+from f_proxy import *
 
 
 if __name__ == '__main__':
@@ -111,13 +37,34 @@ if __name__ == '__main__':
     wait = np.array(0)
     scalar = np.array(0)
 
+    '''
+    Handle resources for FlowVR app and proxy
+    nCPUs is the total number of cores required for running proxy functions and the simulator
+    '''
+    nCPUs=4
+    f_actor= FlowvrActor.options(num_cpus=nCPUs).remote()
+    # host = ray.get(f_actor.get_root.remote())
+    # f_app_prefix = f_actor.
+
+    size = 10
+    z_ids = [1]*size
+
     pdi.expose('wait', wait, pdi.IN)
     # with each message passed through flowvr, create an actor job
     while(wait != 0):
         pdi.expose('scalar', scalar, pdi.IN)
+
         # Dumy Ray computation and sum 
+        x_id = f_actor.create_matrix.remote([1000, 1000])
+        y_id = f_actor.create_matrix.remote([1000, 1000])
+        z_ids[scalar] = f_actor.multiply_matrices.remote(x_id, y_id)
         
         print("PY scalar: {}".format(scalar))
         pdi.expose('wait', wait, pdi.IN)
+
+    '''
+    Compute the result out of all ray calls 
+    '''
+    results = [ray.get(z_id) for z_id in z_ids]
 
     pdi.finalize()
