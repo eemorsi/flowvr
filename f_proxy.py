@@ -8,12 +8,8 @@ import sys
 from subprocess import PIPE, Popen
 from itertools import combinations
 from sys import argv, exit
-from flowvrapp import *
-from pdi_flowvr import Module_PDI
 
-'''
-Manage ray cluster resources 
-'''
+
 class Resources(object):
     def __init__(self):
         self._nodes = {}
@@ -45,6 +41,8 @@ FlowVR actor class is responsible for three main functionalities:
     2. Allocate resources for the whole run of a flowvr app
     3. Init a run 
 '''
+
+
 @ray.remote
 class FlowvrActor(object):
     def __init__(self):
@@ -57,23 +55,6 @@ class FlowvrActor(object):
 
     def get_root(self):
         return ray.services.get_node_ip_address()
-
-    def create_config(self, host, node, cluster):
-        # can be modified to be dynamic
-        # target is to proof it only
-        putmodule_cmd = "./cputter"
-        getmodule_cmd = " ".join(["python3", "getter.py", node, cluster])
-
-        putmodule = Module_PDI(
-            "put", cmdline=putmodule_cmd, pdi_conf="put.yml")
-        getmodule = Module_PDI(
-            "get", cmdline=getmodule_cmd, pdi_conf="get.yml")
-
-        putmodule.getPort("text").link(getmodule.getPort("text"))
-        app_prefix = "_".join(["rflowvr", id])
-        app.generate_xml(app_prefix)
-
-        return app_prefix
 
     '''
     Dumy function -> creat matrix
@@ -94,15 +75,28 @@ class FlowvrActor(object):
         ray.actor.exit_actor()
 
 
-def ray_init():
-    if(len(sys.argv[1:]) < 2):
-        print("Invalid cluster arguments")
-        exit(1)
-    else:
+def create_config(host, node, cluster):
+    from pdi_flowvr import Module_PDI
+    from flowvrapp import app
 
-        # precreated ray cluster configuration
-        machine = sys.argv[1]  # "grisu-48"
-        cluster = sys.argv[2]  # "nancy.grid5000.fr"
-        redis = ".".join([machine, cluster])
-        ray.init(address=":".join([redis, "16380"]))
-        # ray.init()
+    # can be modified to be dynamic
+    # target is to proof it only
+    putmodule_cmd = "./cputter"
+    getmodule_cmd = " ".join(["python3", "getter.py", str(node), str(cluster)])
+
+    putmodule = Module_PDI("put", cmdline=putmodule_cmd,
+                           pdi_conf="put.yml") #os.path.join(os.getcwd(),"flowvr/put.yml")
+    getmodule = Module_PDI("get", cmdline=getmodule_cmd,
+                           pdi_conf="get.yml") #os.path.join(os.getcwd(),"flowvr/get.yml")
+
+    putmodule.getPort("text").link(getmodule.getPort("text"))
+    app_prefix = "_".join(["rflowvr", str(host)])
+    app.generate_xml(app_prefix)
+
+    return app_prefix
+
+
+def ray_init(frontnode, cluster):
+    redis = ".".join([frontnode, cluster])
+    ray.init(address=":".join([redis, "16380"]))
+    # ray.init()
