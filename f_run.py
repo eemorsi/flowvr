@@ -1,13 +1,7 @@
 import pdi
 import yaml
 import ray
-# import os
 import numpy as np
-# import sys
-
-# from subprocess import PIPE, Popen
-# from itertools import combinations
-# from sys import argv, exit
 from f_proxy import *
 import getter
 
