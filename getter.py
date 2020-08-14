@@ -17,8 +17,6 @@ if __name__ == '__main__':
         print("Invalid cluster arguments")
         exit(1)
     else:
-        
-        # precreated ray cluster configuration
         frontnode = sys.argv[1] 
         cluster = sys.argv[2] 
 
@@ -26,60 +24,49 @@ if __name__ == '__main__':
     Init ray preconfigured cluster
     '''
     ray_init(frontnode, cluster)
-    '''
-    Retrieve lists of hosts for locating processes
-    '''
-    cluster = Resources()
-    hosts = cluster.get_hosts()
-    # print(hosts)
-
    
     '''
-    Handle resources for FlowVR app and proxy
-    nCPUs is the total number of cores required for running proxy functions and the simulator
+    nCPUs is the number of cores required for running only the Ray actors 
     '''
-    nCPUs=4
+    nCPUs=2
     f_actor= FlowvrActor.options(num_cpus=nCPUs).remote()
     host = ray.get(f_actor.get_root.remote())
     
-    f_app_prefix = create_config(host, frontnode, cluster)
-    print(f_app_prefix)
-
     '''
     Start data exchange with flowvr
     '''
-    # config_path = "get.yml"
-    # with open(config_path, 'r') as config_file:
-    #     try:
-    #         config = yaml.load(config_file)
-    #     except yaml.YAMLError as exc:
-    #         exit(exc)
+    config_path = "get.yml"
+    with open(config_path, 'r') as config_file:
+        try:
+            config = yaml.load(config_file)
+        except yaml.YAMLError as exc:
+            exit(exc)
 
-    # pdi.init(yaml.dump(config["pdi"]))
-    # wait = np.array(0)
-    # scalar = np.array(0)
+    pdi.init(yaml.dump(config["pdi"]))
+    wait = np.array(0)
+    scalar = np.array(0)
 
 
-    # size = 10
-    # z_ids = [1]*size
+    size = 10
+    z_ids = [1]*size
 
-    # pdi.expose('wait', wait, pdi.IN)
-    # # with each message passed through flowvr, create an actor job
-    # while(wait != 0):
-    #     pdi.expose('scalar', scalar, pdi.IN)
+    pdi.expose('wait', wait, pdi.IN)
+    # with each message passed through flowvr, create an actor job
+    while(wait != 0):
+        pdi.expose('scalar', scalar, pdi.IN)
 
-    #     # Dumy Ray computation and sum 
-    #     x_id = f_actor.create_matrix.remote([1000, 1000])
-    #     y_id = f_actor.create_matrix.remote([1000, 1000])
-    #     z_ids[scalar] = f_actor.multiply_matrices.remote(x_id, y_id)
+        # Dumy Ray computation and sum 
+        x_id = f_actor.create_matrix.remote([1000, 1000])
+        y_id = f_actor.create_matrix.remote([1000, 1000])
+        z_ids[scalar] = f_actor.multiply_matrices.remote(x_id, y_id)
         
-    #     print("PY scalar: {}".format(scalar))
-    #     pdi.expose('wait', wait, pdi.IN)
+        print("PY scalar: {}".format(scalar))
+        pdi.expose('wait', wait, pdi.IN)
 
-    # '''
-    # Compute the result out of all ray calls 
-    # '''
-    # results = [ray.get(z_id) for z_id in z_ids]
+    '''
+    Compute the result out of all ray calls 
+    '''
+    results = [ray.get(z_id) for z_id in z_ids]
 
-    # pdi.finalize()
+    pdi.finalize()
     f_actor.kill.remote()

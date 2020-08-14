@@ -48,7 +48,7 @@ class FlowvrActor(object):
     def __init__(self):
         self.id = 0
 
-    def run(self, cmd, hosts):
+    def run(self, cmd):
         process = Popen(args=cmd, stdin=None, stdout=PIPE,
                         stderr=None, shell=True)
         return process.communicate()[0]
