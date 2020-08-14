@@ -7,7 +7,7 @@
     - ProxyList: nodes where to run the flowvr/ray proxy. If going in situ (proxies running on same
       nodes than flowvr application) the this list will likely    be a sub list of AppList
     - RayList: resources that will use Ray for running workers (do not include the ProxyList)
- <span style="color:#FFFF00">Allow Ray to manage all resources as a single pool of machines, each entity can be use then either for doing compution as a ray actor or simply for the simulator</span>
+ <mark> Allow Ray to manage all resources as a single pool of machines, each entity can be use then either for doing compution as a ray actor or simply for the simulator</mark>
  4. Flowvr app description get the 2 first lists to instantiate the graph. The proxy are included
     but without starting command (use ":" instead)
     - python3 app.py AppList ProxyList
