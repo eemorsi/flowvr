@@ -77,17 +77,19 @@ class FlowvrActor(object):
 
 def create_config(host, node, cluster):
     from pdi_flowvr import Module_PDI
-    from flowvrapp import app
+    from flowvrapp import app, FlowvrRunSSHMultiple
 
     # can be modified to be dynamic
     # target is to proof it only
     putmodule_cmd = "./cputter"
     getmodule_cmd = " ".join(["python3", "getter.py", str(node), str(cluster)])
 
-    putmodule = Module_PDI("put", cmdline=putmodule_cmd,
-                           pdi_conf="put.yml") #os.path.join(os.getcwd(),"flowvr/put.yml")
-    getmodule = Module_PDI("get", cmdline=getmodule_cmd,
-                           pdi_conf="get.yml") #os.path.join(os.getcwd(),"flowvr/get.yml")
+    putrun = FlowvrRunSSHMultiple(putmodule_cmd, hosts=host, prefix="put")
+    getrun = FlowvrRunSSHMultiple(getmodule_cmd, hosts=host, prefix="get")
+    putmodule = Module_PDI("put/0", run=putrun,
+                           pdi_conf="put.yml")  # os.path.join(os.getcwd(),"flowvr/put.yml")
+    getmodule = Module_PDI("get/0", run=getrun,
+                           pdi_conf="get.yml")  # os.path.join(os.getcwd(),"flowvr/get.yml")
 
     putmodule.getPort("text").link(getmodule.getPort("text"))
     app_prefix = "_".join(["rflowvr", str(host)])
