@@ -42,15 +42,17 @@ FlowVR actor class is responsible for three main functionalities:
     3. Init a run 
 '''
 
-
 @ray.remote
 class FlowvrActor(object):
     def __init__(self):
         self.id = 0
 
-    def run(self, cmd):
-        process = Popen(args=cmd, stdin=None, stdout=PIPE,
+    def run(self, f_app_prefix):
+        source= "source /home/emorsi/pdi/build/flowvr/bin/flowvr-suite-config.sh"
+        cmd = ";".join([source, "flowvr"])
+        process = Popen(args=" ".join([cmd, f_app_prefix]), stdin=None, stdout=PIPE,
                         stderr=None, shell=True)
+
         return process.communicate()[0]
 
     def get_root(self):
@@ -70,7 +72,6 @@ class FlowvrActor(object):
     '''
     A safe method to clear actors
     '''
-
     def kill(self):
         ray.actor.exit_actor()
 
@@ -92,6 +93,7 @@ def create_config(host, node, cluster):
                            pdi_conf="get.yml")  # os.path.join(os.getcwd(),"flowvr/get.yml")
 
     putmodule.getPort("text").link(getmodule.getPort("text"))
+
     app_prefix = "_".join(["rflowvr", str(host)])
     app.generate_xml(app_prefix)
 

@@ -61,6 +61,8 @@ if __name__ == '__main__':
     Compute the result out of all ray calls 
     '''
     results = [ray.get(z_id) for z_id in z_ids]
-
+    '''
+    Finalize data exchange and kill active actor from Ray 
+    '''
     pdi.finalize()
     f_actor.kill.remote()
