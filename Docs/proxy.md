@@ -2,25 +2,25 @@
  1. Get a list of hosts from batch scheduler: OARlist
  2. Identify a frontnode that could be either one of the OARList or the current frontnode of the
     computer. Will be used to run Ray frontend and flowvr frontend.
- > 3. ~~From this list build 3 lists:~~  
- >   - ~~AppList: nodes to run the application~~
- >   - ~~ProxyList: nodes where to run the flowvr/ray proxy. If going in situ (proxies running on same
- >     nodes than flowvr application) the this list will likely    be a sub list of AppList~~
- >   - ~~RayList: resources that will use Ray for running workers (do not include the ProxyList)~~\
-
  3. Allow Ray to manage all resources as a single pool of machines, each entity can be use then either for doing compution as a ray actor or simply for the simulator
-
- 4. Flowvr app description get the 2 first lists to instantiate the graph. The proxy are included
-    but without starting command (use ":" instead)
-    - python3 app.py AppList ProxyList
- 5. flowvrdList: union of AppList and ProxyList removing duplicates
- 6. Start daemons on frontnode + flowvrdList. Use either flowvr-run-ssh or mpirun as launcher
-    - mpirun --hosts frontnode+flowvrList flowvrd 
-    - flowvr-run-ssh frontnode+flowvrList flowvrd
- 7. Start the flowvr application from the frontNode
-    - flowvr -a  app
+ > 3. From this list build 3 lists:  
+ >   - AppList: nodes to run the application
+ >   - ProxyList: nodes where to run the flowvr/ray proxy. If going in situ (proxies running on same
+ >     nodes than flowvr application) the this list will likely    be a sub list of AppList
+ >   - RayList: resources that will use Ray for running workers (do not include the ProxyList)
+ 4. Configure allocated resources by running `setup_cluster_nodes.sh`. This single file will start and add all nodes to a ray cluster. It will also start FlowVR daemon per each node of the cluster  
+ 5. Run FlowVR in the standard way without a need to modify or to seperate runs of the different pieces of the FlowVR app. Complexity of this approach hidden behind the f_run.py which init and run all components
+ > 4. Flowvr app description get the 2 first lists to instantiate the graph. The proxy are included
+ >   but without starting command (use ":" instead)
+ >   - python3 app.py AppList ProxyList
+ > 5. flowvrdList: union of AppList and ProxyList removing duplicates
+ > 6. Start daemons on frontnode + flowvrdList. Use either flowvr-run-ssh or mpirun as launcher
+ >   - mpirun --hosts frontnode+flowvrList flowvrd 
+ >   - flowvr-run-ssh frontnode+flowvrList flowvrd
+ > 7. Start the flowvr application from the frontNode
+ >   - flowvr -a  app
  8. Start Ray (redis data base) and add all nodes of  RayList and ProxyList.
-    - you know better than me how to do this
+    - ~~you know better than me how to do this~~
  9. Start a Ray script that:
     - start the proxies actors on the nodes of the ProxyList. These actors implement flowvr modules
       and so once started they will connect to their local flowvrd. Need to forward the FLOWVR
