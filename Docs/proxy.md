@@ -2,7 +2,7 @@
  1. Get a list of hosts from batch scheduler: OARlist
  2. Identify a frontnode that could be either one of the OARList or the current frontnode of the
     computer. Will be used to run Ray frontend and flowvr frontend.
- 3. ~~From this list build 3 lists:  
+ 3. ~~From this list build 3 lists:~~  
     - AppList: nodes to run the application
     - ProxyList: nodes where to run the flowvr/ray proxy. If going in situ (proxies running on same
       nodes than flowvr application) the this list will likely    be a sub list of AppList
