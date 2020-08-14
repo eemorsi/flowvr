@@ -2,11 +2,11 @@
  1. Get a list of hosts from batch scheduler: OARlist
  2. Identify a frontnode that could be either one of the OARList or the current frontnode of the
     computer. Will be used to run Ray frontend and flowvr frontend.
- 3. From this list build 3 lists:  
+ 3. ~~From this list build 3 lists:  
     - AppList: nodes to run the application
     - ProxyList: nodes where to run the flowvr/ray proxy. If going in situ (proxies running on same
       nodes than flowvr application) the this list will likely    be a sub list of AppList
-    - RayList: resources that will use Ray for running workers (do not include the ProxyList)
+    - RayList: resources that will use Ray for running workers (do not include the ProxyList)~~\
  <mark> Allow Ray to manage all resources as a single pool of machines, each entity can be use then either for doing compution as a ray actor or simply for the simulator</mark>
  4. Flowvr app description get the 2 first lists to instantiate the graph. The proxy are included
     but without starting command (use ":" instead)
