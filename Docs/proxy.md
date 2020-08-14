@@ -19,8 +19,11 @@
  >   - flowvr-run-ssh frontnode+flowvrList flowvrd
  > 7. Start the flowvr application from the frontNode
  >   - flowvr -a  app
+ {::comment} 
  8. Start Ray (redis data base) and add all nodes of  RayList and ProxyList.
-    - ~~you know better than me how to do this~~
+    - you know better than me how to do this
+ {:/comment}
+
  9. Start a Ray script that:
     - start the proxies actors on the nodes of the ProxyList. These actors implement flowvr modules
       and so once started they will connect to their local flowvrd. Need to forward the FLOWVR
