@@ -95,7 +95,7 @@ def create_config(host, node, cluster):
 
     putmodule.getPort("text").link(getmodule.getPort("text"))
 
-    app_prefix = "_".join(["rflowvr", str(host)])
+    app_prefix = "_".join(["rflowvr", str(host).replace('.','')])
     app.generate_xml(app_prefix)
 
     return app_prefix

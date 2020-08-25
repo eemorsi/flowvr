@@ -47,16 +47,23 @@ if __name__ == '__main__':
     f_actor = FlowvrActor.options(num_cpus=nCPUs).remote()
     host = ray.get(f_actor.get_root.remote())
 
+    # create flowvr configuration automatically
+    app_prefix = create_config(host, frontnode, cluster)
+    print("App prefix: {}".format(app_prefix))
+
+    cmd=['flowvr', app_prefix]
+    process = Popen(args=" ".join(cmd), stdin=None, stdout=PIPE, stderr=None, shell=True)
+    print(process.communicate()[0])
+
     '''
     Couple C legacy code with python using flowvr
     '''
-    ray.get(# retrieve results of the running flowvr on a ray actor
-        f_actor.run.remote( #run flowvr app
-            create_config(host, frontnode, cluster)#create flowvr configuration automatically
-        )
-    )
+    # ray.get(  # retrieve results of the running flowvr on a ray actor
+    #     f_actor.run.remote(  # run flowvr app
+    #         app_prefix
+    #     )
+    # )
     '''
     Kill the flowvr actor after finish execution
     '''
-    f_actor.kill.remote()
-
+    # f_actor.kill.remote()
