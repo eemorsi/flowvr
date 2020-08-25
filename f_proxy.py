@@ -62,12 +62,12 @@ class FlowvrActor(object):
     '''
     Dumy function -> creat matrix
     '''
-    def create_matrix(size):
+    def create_matrix(self, size):
         return np.random.normal(size=size)
     '''
     Dumy function -> sum of dot product
     '''
-    def multiply_matrices(x, y):
+    def multiply_matrices(self, x, y):
         return np.sum(np.dot(x, y))
 
     '''

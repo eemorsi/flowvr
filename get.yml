@@ -9,6 +9,7 @@ pdi:
     flowvr:
       component: module
       wait_on_data: wait
+      abort_on_finalize: true
       input_ports:
         text:
           data: scalar

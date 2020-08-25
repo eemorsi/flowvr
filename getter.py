@@ -66,9 +66,9 @@ if __name__ == '__main__':
         pdi.expose('scalar', scalar, pdi.IN)
 
         # Dumy Ray computation and sum 
-        x_id = create_matrix.remote([1000, 1000])
-        y_id = create_matrix.remote([1000, 1000])
-        z_ids.append(multiply_matrices.remote(x_id, y_id))
+        x_id = f_actor.create_matrix.remote([1000, 1000])
+        y_id = f_actor.create_matrix.remote([1000, 1000])
+        z_ids.append(f_actor.multiply_matrices.remote(x_id, y_id))
         
         print("PY scalar: {}".format(scalar))
         print("wait before: {}".format(wait))
