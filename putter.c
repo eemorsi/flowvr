@@ -12,7 +12,7 @@ int main()
     PC_tree_t node = PC_parse_path("put.yml");
     PDI_init(PC_get(node, ".pdi"));
 
-    int wait;
+    int wait=1;
     int scalar = 0;
     PDI_expose("wait", &wait, PDI_IN);
     while (scalar < 10)
@@ -22,9 +22,9 @@ int main()
         if (scalar == 10)
         {
             wait = 0;
+
             break;
         }
-        PDI_expose("wait", &wait, PDI_IN);
         scalar++;
         sleep(2);
     }

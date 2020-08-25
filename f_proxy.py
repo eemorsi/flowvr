@@ -48,8 +48,9 @@ class FlowvrActor(object):
         self.id = 0
 
     def run(self, f_app_prefix):
-        source= "source /home/emorsi/pdi/build/flowvr/bin/flowvr-suite-config.sh"
-        cmd = ";".join([source, "flowvr"])
+        # source= "source /home/emorsi/pdi/build/flowvr/bin/flowvr-suite-config.sh"
+        # cmd = ";".join([source, "flowvr"])
+        cmd = "flowvr"
         process = Popen(args=" ".join([cmd, f_app_prefix]), stdin=None, stdout=PIPE,
                         stderr=None, shell=True)
 
@@ -85,11 +86,11 @@ def create_config(host, node, cluster):
     putmodule_cmd = "./cputter"
     getmodule_cmd = " ".join(["python3", "getter.py", str(node), str(cluster)])
 
-    putrun = FlowvrRunSSHMultiple(putmodule_cmd, hosts=host, prefix="put")
-    getrun = FlowvrRunSSHMultiple(getmodule_cmd, hosts=host, prefix="get")
-    putmodule = Module_PDI("put/0", run=putrun,
+    # putrun = FlowvrRunSSHMultiple(putmodule_cmd, hosts=host, prefix="put")
+    # getrun = FlowvrRunSSHMultiple(getmodule_cmd, hosts=host, prefix="get")
+    putmodule = Module_PDI("put/0", cmdline=putmodule_cmd,
                            pdi_conf="put.yml")  # os.path.join(os.getcwd(),"flowvr/put.yml")
-    getmodule = Module_PDI("get/0", run=getrun,
+    getmodule = Module_PDI("get/0", cmdline=getmodule_cmd,
                            pdi_conf="get.yml")  # os.path.join(os.getcwd(),"flowvr/get.yml")
 
     putmodule.getPort("text").link(getmodule.getPort("text"))

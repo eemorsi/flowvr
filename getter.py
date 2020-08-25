@@ -57,7 +57,8 @@ if __name__ == '__main__':
 
 
     size = 10
-    z_ids = [1]*size
+    # z_ids = [1]*size
+    z_ids=[]
 
     pdi.expose('wait', wait, pdi.IN)
     # with each message passed through flowvr, create an actor job
@@ -67,17 +68,19 @@ if __name__ == '__main__':
         # Dumy Ray computation and sum 
         x_id = create_matrix.remote([1000, 1000])
         y_id = create_matrix.remote([1000, 1000])
-        z_ids[scalar] = multiply_matrices.remote(x_id, y_id)
+        z_ids.append(multiply_matrices.remote(x_id, y_id))
         
         print("PY scalar: {}".format(scalar))
+        print("wait before: {}".format(wait))
         pdi.expose('wait', wait, pdi.IN)
-
+        print("wait after: {}".format(wait))
     '''
     Compute the result out of all ray calls 
     '''
     results = [ray.get(z_id) for z_id in z_ids]
+    print(results)
     '''
     Finalize data exchange and kill active actor from Ray 
     '''
     pdi.finalize()
-    f_actor.kill.remote()
+    # f_actor.kill.remote()
