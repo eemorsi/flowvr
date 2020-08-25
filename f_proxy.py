@@ -70,7 +70,7 @@ class FlowvrActor(object):
         return np.sum(np.dot(x, y))
 
     '''
-    A safe method to clear actors
+    A safe method to clear actorsa
     '''
     def kill(self):
         ray.actor.exit_actor()

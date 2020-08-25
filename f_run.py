@@ -59,3 +59,4 @@ if __name__ == '__main__':
     Kill the flowvr actor after finish execution
     '''
     f_actor.kill.remote()
+

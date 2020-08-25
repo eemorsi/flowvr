@@ -18,10 +18,20 @@ redis_address="$redis_address:$port"
 flowvr_home=$HOME/pdi/build/flowvr
 scripts_home=`pwd`
 
-ray start --head --redis-port=$port --webui-host 0.0.0.0 --num-cpus 1
+# pass 0 to configure a single node cluster for testing purposes with large OAR reservation
+if [ $1!=0 ]
+then
+	ray start --head --port=$port --webui-host 0.0.0.0 --num-cpus 1
+
+	for host in `uniq $OAR_NODEFILE`; 
+	do
+   		oarsh $host $scripts_home/setup_node.sh $redis_address $flowvr_home; 
+	done
+else
+	ray start --head --port=$port --webui-host 0.0.0.0 
+
+	source $flowvr_home/bin/flowvr-suite-config.sh 
+	flowvrd > /dev/null 2>&1 &
+fi
 
 
-for host in `uniq $OAR_NODEFILE`; 
-do
-   	oarsh $host $scripts_home/setup_node.sh $redis_address $flowvr_home; 
-done
