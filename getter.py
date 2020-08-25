@@ -5,6 +5,21 @@ import numpy as np
 from f_proxy import *
 
 
+'''
+Dumy function -> creat matrix
+'''
+@ray.remote
+def create_matrix(size):
+    return np.random.normal(size=size)
+'''
+Dumy function -> sum of dot product
+'''
+@ray.remote
+def multiply_matrices(x, y):
+    return np.sum(np.dot(x, y))
+
+
+
 if __name__ == '__main__':
 
     if(len(sys.argv[1:])< 2):
@@ -50,9 +65,9 @@ if __name__ == '__main__':
         pdi.expose('scalar', scalar, pdi.IN)
 
         # Dumy Ray computation and sum 
-        x_id = f_actor.create_matrix.remote([1000, 1000])
-        y_id = f_actor.create_matrix.remote([1000, 1000])
-        z_ids[scalar] = f_actor.multiply_matrices.remote(x_id, y_id)
+        x_id = create_matrix.remote([1000, 1000])
+        y_id = create_matrix.remote([1000, 1000])
+        z_ids[scalar] = multiply_matrices.remote(x_id, y_id)
         
         print("PY scalar: {}".format(scalar))
         pdi.expose('wait', wait, pdi.IN)
