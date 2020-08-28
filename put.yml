@@ -1,5 +1,5 @@
 pdi:
-  logging: debug
+  # logging: debug
 
   data:
     wait: int

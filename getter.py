@@ -33,13 +33,14 @@ if __name__ == '__main__':
     Init ray preconfigured cluster
     '''
     ray_init(frontnode, cluster)
+    print(ray.available_resources())
    
     '''
     nCPUs is the number of cores required for running only the Ray actors 
     '''
     nCPUs=2
-    f_actor= FlowvrActor.options(num_cpus=nCPUs).remote()
-    host = ray.get(f_actor.get_root.remote())
+    # f_actor= FlowvrActor.options(num_cpus=nCPUs).remote()
+    # host = ray.get(f_actor.get_root.remote())
     
     '''
     Start data exchange with flowvr
@@ -59,17 +60,22 @@ if __name__ == '__main__':
     size = 10
     # z_ids = [1]*size
     z_ids=[]
-
+    indx=0
+    f_actors=[]
     pdi.expose('wait', wait, pdi.IN)
     # with each message passed through flowvr, create an actor job
     while(wait != 0):
         pdi.expose('scalar', scalar, pdi.IN)
 
         # Dumy Ray computation and sum 
-        x_id = f_actor.create_matrix.remote([1000, 1000])
-        y_id = f_actor.create_matrix.remote([1000, 1000])
+        f_actors.append( FlowvrActor.options(num_cpus=nCPUs).remote())
+        f_actor = f_actors[indx]
+        indx+=1
+
+        x_id = f_actor.create_matrix.remote([scalar, scalar])
+        y_id = f_actor.create_matrix.remote([scalar, scalar])
         z_ids.append(f_actor.multiply_matrices.remote(x_id, y_id))
-        
+
         print("PY scalar: {}".format(scalar))
         print("wait before: {}".format(wait))
         pdi.expose('wait', wait, pdi.IN)
@@ -77,8 +83,18 @@ if __name__ == '__main__':
     '''
     Compute the result out of all ray calls 
     '''
-    results = [ray.get(z_id) for z_id in z_ids]
+    print(z_ids)
+    
+    results = [ray.get(z_obj_id) for z_obj_id in z_ids]
+
+    """
+    Kill actors to release resoucres of workers
+    """
+    # [a.kill.remote() for a in f_actors]
+
+
     print(results)
+
     '''
     Finalize data exchange and kill active actor from Ray 
     '''

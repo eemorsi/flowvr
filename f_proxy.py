@@ -50,9 +50,11 @@ class FlowvrActor(object):
     def run(self, f_app_prefix):
         # source= "source /home/emorsi/pdi/build/flowvr/bin/flowvr-suite-config.sh"
         # cmd = ";".join([source, "flowvr"])
-        cmd = "flowvr"
-        process = Popen(args=" ".join([cmd, f_app_prefix]), stdin=None, stdout=PIPE,
-                        stderr=None, shell=True)
+        cmd = ["flowvr", f_app_prefix]
+        # process = Popen(args=" ".join([cmd, f_app_prefix]), stdin=None, stdout=PIPE,
+        #                 stderr=None, shell=True)
+
+        process = Popen(args=" ".join(cmd), stdin=PIPE, stdout=PIPE, stderr=None, shell=True)
 
         return process.communicate()[0]
 

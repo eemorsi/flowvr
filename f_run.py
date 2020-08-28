@@ -51,9 +51,9 @@ if __name__ == '__main__':
     app_prefix = create_config(host, frontnode, cluster)
     print("App prefix: {}".format(app_prefix))
 
-    cmd=['flowvr', app_prefix]
-    process = Popen(args=" ".join(cmd), stdin=None, stdout=PIPE, stderr=None, shell=True)
-    print(process.communicate()[0])
+    # cmd=['flowvr', app_prefix]
+    # process = Popen(args=" ".join(cmd), stdin=None, stdout=PIPE, stderr=None, shell=True)
+    # print(process.communicate()[0])
 
     '''
     Couple C legacy code with python using flowvr
