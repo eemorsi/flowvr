@@ -68,9 +68,11 @@ if __name__ == '__main__':
         pdi.expose('scalar', scalar, pdi.IN)
 
         # Dumy Ray computation and sum 
-        f_actors.append( FlowvrActor.options(num_cpus=nCPUs).remote())
-        f_actor = f_actors[indx]
-        indx+=1
+        f_actor = FlowvrActor.options(num_cpus=nCPUs).remote()
+        f_actors.append(f_actor)
+        # f_actors.append( FlowvrActor.options(num_cpus=nCPUs).remote())
+        # f_actor = f_actors[indx]
+        # indx+=1
 
         x_id = f_actor.create_matrix.remote([scalar, scalar])
         y_id = f_actor.create_matrix.remote([scalar, scalar])
@@ -91,8 +93,6 @@ if __name__ == '__main__':
     Kill actors to release resoucres of workers
     """
     # [a.kill.remote() for a in f_actors]
-
-
     print(results)
 
     '''
