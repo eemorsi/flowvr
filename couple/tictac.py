@@ -3,11 +3,11 @@ from filters import *
 
 
 # Original TicTac example, calling the python implementation of the module
-putmodule = Module("put", cmdline = "python tictac_module.py put")
+putmodule = Module("put", cmdline = "python3 putter.py")
 outport = putmodule.addPort("text", direction = "out")
 
 
-getmodule = Module("get", cmdline = "python tictac_module.py get")
+getmodule = Module("get", cmdline = "python3 getter.py")
 inport = getmodule.addPort("text", direction = "in")
 
 outport.link(inport)
