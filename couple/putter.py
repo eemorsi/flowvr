@@ -2,7 +2,7 @@ import sys, time
 import flowvr
 
 if __name__ == '__main__':
-
+  
   ports = flowvr.vectorPort()
   port = flowvr.OutputPort('text')
 

@@ -7,7 +7,7 @@ putmodule = Module("put", cmdline = "python3 putter.py")
 outport = putmodule.addPort("text", direction = "out")
 
 
-getmodule = Module("get", cmdline = "python3 getter.py")
+getmodule = Module("get", cmdline = " ")
 inport = getmodule.addPort("text", direction = "in")
 
 outport.link(inport)
