@@ -10,7 +10,11 @@ outport = putmodule.addPort("text", direction = "out")
 getmodule = Module("get", cmdline = " ")
 inport = getmodule.addPort("text", direction = "in")
 
+getmodule1 = Module("get1", cmdline = " ")
+inport1 = getmodule1.addPort("text", direction = "in")
+
 outport.link(inport)
+outport.link(inport1)
 
 
 # Add a max frequency  filter, to cap the producer frequency

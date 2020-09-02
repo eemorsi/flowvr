@@ -2,10 +2,21 @@ import sys, time
 import flowvr
 
 if __name__ == '__main__':
+  if(len(sys.argv[1:]) < 2):
+      print("Invalid cluster arguments")
+      exit(1)
+  else:
+      # precreated ray cluster configuration
+      module_name = sys.argv[1]
+      host = sys.argv[2]  
+
   ports = flowvr.vectorPort()
   port = flowvr.InputPort('text')
   ports.push_back(port)
-  module = flowvr.initModule(ports,"","get","/grisou-51.nancy.grid5000.fr/test/read:P")
+  parent_name="/".join(["",str(host),"test","read:P"])
+  print(parent_name)
+  
+  module = flowvr.initModule(ports,"",str(module_name),parent_name)
   
   while module.wait():
     message = port.get()   
