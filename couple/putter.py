@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     it = 0
     size = 1000
-    maxiter = 10
+    maxiter = 5
     extras = []
     while (module.wait()):
         # port.stamps must be passed in because standard stamps can be
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         message.setStamp("mycounter", it + 1)
         message.setStamp(("myarray", 1), it + 1)
         message.setStamp("mystring", "this it iteration %d" % it)
-        size = size + 50
+        # size = size + 50
         message.data = module.allocString(str(size))
 
         port.put(message)
