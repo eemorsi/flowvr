@@ -15,7 +15,7 @@ port=16380
 redis_address="$(hostname --ip-address)"
 redis_address="$redis_address:$port"
 
-flowvr_home=$HOME/pdi/build/flowvr
+flowvr_home=$HOME/pdi/build
 scripts_home=`pwd`
 
 # pass 0 to configure a single node cluster for testing purposes with large OAR reservation

@@ -15,7 +15,8 @@ if __name__ == '__main__':
   module = flowvr.initModule(ports);
 
   it = 0
-  maxiter=50
+  size=1000
+  maxiter=10
   extras = []
   while module.wait():
     # port.stamps must be passed in because standard stamps can be
@@ -26,11 +27,12 @@ if __name__ == '__main__':
     message.setStamp("mycounter", it + 1)
     message.setStamp(("myarray", 1), it + 1)
     message.setStamp("mystring", "this it iteration %d" % it)
-        
-    message.data = module.allocString("tic" if it & 1 else "tac")    
-
+    size = size+100*it
+    message.data = module.allocString(str(size))   
+    
     port.put(message)
     it += 1
+
     time.sleep(0.4)
     if it > maxiter:
       break;
