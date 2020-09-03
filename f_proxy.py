@@ -103,7 +103,7 @@ def create_config(host, node, cluster):
     return app_prefix
 
 
-def ray_init(redis):
-    # redis = ".".join([frontnode, cluster])
+def ray_init(frontnode, cluster):
+    redis = ".".join([frontnode, cluster])
     ray.init(address=":".join([redis, "16380"]))
     # ray.init()

@@ -2,6 +2,9 @@
 Make sure that ray is exported to your shell 
 export PATH=$PATH:$HOME/.local/bin
 
+
+python3 getter.py get1 grisou-9.nancy.grid5000.fr grisou-9.nancy.grid5000.fr
+
 '''
 import sys, time
 import flowvr
@@ -40,6 +43,10 @@ if __name__ == '__main__':
   
   module = flowvr.initModule(ports,"",str(module_name),parent_name)
   
+  # define the number of cores required for single computation
+  nCPUs=2
+  # holders of the ray elemenets
+
   z_ids=[]
   indx=0
   f_actors=[]
