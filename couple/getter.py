@@ -37,8 +37,8 @@ class FlowvrActor(object):
             recu_list.append(message.data.asString().decode())
         
         module.close()
-        
-        return {recu_list}
+
+        return recu_list
 
     def close(self):
         ray.actor.exit_actor()
