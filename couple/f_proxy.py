@@ -1,9 +1,8 @@
-import pdi
-import yaml
 import ray
 import os
 import numpy as np
 import sys
+import flowvr
 
 from subprocess import PIPE, Popen
 from itertools import combinations
@@ -41,42 +40,32 @@ FlowVR actor class is responsible for three main functionalities:
     2. Allocate resources for the whole run of a flowvr app
     3. Init a run 
 '''
+@ray.remote
+class FlowvrActor(object):
+    def __init__(self, port, parent_name):
+        self.port_n, self.parent_name = port, parent_name
 
-# @ray.remote
-# class FlowvrActor(object):
-#     def __init__(self):
-#         self.id = 0
+    def exchange_data(self, module_name):
+        
+        ports = flowvr.vectorPort()
+        port = flowvr.InputPort(self.port_n)
+        ports.push_back(port)
 
-#     def run(self, f_app_prefix):
-#         # source= "source /home/emorsi/pdi/build/flowvr/bin/flowvr-suite-config.sh"
-#         # cmd = ";".join([source, "flowvr"])
-#         cmd = ["flowvr", f_app_prefix]
-#         # process = Popen(args=" ".join([cmd, f_app_prefix]), stdin=None, stdout=PIPE,
-#         #                 stderr=None, shell=True)
+        module = flowvr.initModule(ports , "", str(module_name), self.parent_name)
+        recu_list = []
 
-#         process = Popen(args=" ".join(cmd), stdin=PIPE, stdout=PIPE, stderr=None, shell=True)
+        while module.wait():
+            message = port.get()
+            # print("get receives {} at it {}".format(message.data.asString().decode(), message.getStamp("it")))
+            recu_list.append(message.data.asString().decode())
+        
+        module.abort()
+        module.close()
 
-#         return process.communicate()[0]
+        return recu_list
 
-#     def get_root(self):
-#         return ray.services.get_node_ip_address()
-
-#     '''
-#     Dumy function -> creat matrix
-#     '''
-#     def create_matrix(self, size):
-#         return np.random.normal(size=size)
-#     '''
-#     Dumy function -> sum of dot product
-#     '''
-#     def multiply_matrices(self, x, y):
-#         return np.sum(np.dot(x, y))
-
-#     '''
-#     A safe method to clear actorsa
-#     '''
-#     def kill(self):
-#         ray.actor.exit_actor()
+    def close(self):
+        ray.actor.exit_actor()
 
 
 def create_config(host, node, cluster):

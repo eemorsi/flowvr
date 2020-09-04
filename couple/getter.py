@@ -12,37 +12,8 @@ python3 getter.py graphite-1.nancy.grid5000.fr graphite-1.nancy.grid5000.fr
 
 import sys
 import time
-import flowvr
 import ray
 from f_proxy import *
-
-
-@ray.remote
-class FlowvrActor(object):
-    def __init__(self, port, parent_name):
-        self.port_n, self.parent_name = port, parent_name
-
-    def exchange_data(self, module_name):
-        
-        ports = flowvr.vectorPort()
-        port = flowvr.InputPort(self.port_n)
-        ports.push_back(port)
-
-        module = flowvr.initModule(ports , "", str(module_name), self.parent_name)
-        recu_list = []
-
-        while module.wait():
-            message = port.get()
-            # print("get receives {} at it {}".format(message.data.asString().decode(), message.getStamp("it")))
-            recu_list.append(message.data.asString().decode())
-        
-        module.close()
-
-        return recu_list
-
-    def close(self):
-        ray.actor.exit_actor()
-
 
 if __name__ == '__main__':
     if(len(sys.argv[1:]) < 2):
@@ -59,9 +30,7 @@ if __name__ == '__main__':
     ray_init(redis)
 
     print(ray.available_resources())
-    # ports = flowvr.vectorPort()
-    # port = flowvr.InputPort('text')
-    # ports.push_back(port)
+  
     port = 'text'
     parent_name = "/".join(["", str(host), "test", "read:P"])
     print(parent_name)
@@ -75,16 +44,12 @@ if __name__ == '__main__':
     obj_id = f_actor.exchange_data.remote(module_names[0])
     obj_id1 = f_actor1.exchange_data.remote(module_names[1])
 
+    # obtain results out of all created actors 
     recu_list = ray.get(obj_id)
     recu_list1 = ray.get(obj_id1)
 
+    # do whatever needed with the obtained results 
+    # just printing results 
     print(recu_list)
     print(recu_list1)
 
-    # module = flowvr.initModule(ports,"",str(module_name),parent_name)
-
-    # while module.wait():
-    #   message = port.get()
-    #   print("get receives {} at it {}".format(message.data.asString().decode(), message.getStamp("it")))
-
-    # module.close()
